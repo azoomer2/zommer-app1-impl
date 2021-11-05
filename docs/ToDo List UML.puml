@@ -4,26 +4,39 @@ Class Application{
 
 
 }
-Class TodoItemControl{
-    String dueDate
-    String name
+Class Item{
+    String description;
+    String date;
+
+    +getDescription()
+    +setDescription()
+    +getDate()
+    +setDate()
+
+}
+
+Class TodoItemManager{
+    String date
     String description
 
-    +addTask(String date,String task, String description)
-    +removeTask(int itemNum)
-    +markComplete(int itemNum)
+    +addTask(String date,String description)
+    +deleteTask(int index)
+    +clearList()
+    +markComplete(int index)
+    -displayAll()
+    -displayComplete()
+    -displayIncomplete()
+    -saveList()
+    -loadList()
 
-    -displayNextList()
-    -displayPrevList()
+
+    -displayAll()
+    -displayComplete()
+    -displayIncomplete()
 }
-Class TodoListControl{
-       String name;
 
-       +initList(String listName)
-       +deleteList(int index)
-       +renameList(String newName)
-}
 
-Application --> TodoListControl
-Application --> TodoItemControl
+Application --> TodoItemManager
+
+TodoItemManager --> Item
 @enduml
