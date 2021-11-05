@@ -1,0 +1,29 @@
+@startuml
+
+Class Application{
+
+
+}
+Class TodoItemControl{
+    String dueDate
+    String name
+    String description
+
+    +addTask(String date,String task, String description)
+    +removeTask(int itemNum)
+    +markComplete(int itemNum)
+
+    -displayNextList()
+    -displayPrevList()
+}
+Class TodoListControl{
+       String name;
+
+       +initList(String listName)
+       +deleteList(int index)
+       +renameList(String newName)
+}
+
+Application --> TodoListControl
+Application --> TodoItemControl
+@enduml
