@@ -4,28 +4,49 @@
  */
 package baseline;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Menu;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class ApplicationController {
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
+
+
+public class ApplicationController implements Initializable {
+
+        private LocalDate dateInput;
+        private String descriptionInput;
+
+        TodoItemManager action = new TodoItemManager();
 
         @FXML
-        private Button addItem;
+        private Button addButton;
 
         @FXML
-        private Button createList;
+        private Button clearButton;
+
+        @FXML
+        private TableColumn<?, ?> completed;
 
         @FXML
         private TableView<?> dataTable;
 
         @FXML
-        private Button deleteItem;
+        private TableColumn<?, ?> date;
 
         @FXML
-        private Button deleteList;
+        private Button deleteButton;
+
+        @FXML
+        private TableColumn<?, ?> description;
 
         @FXML
         private TextField descriptionField;
@@ -34,22 +55,50 @@ public class ApplicationController {
         private DatePicker dueDateField;
 
         @FXML
-        private Button markComplete;
+        private Menu file;
 
         @FXML
-        private Button nextList;
+        void addItem(ActionEvent event) {
+                String dateStr;
+
+                descriptionInput = descriptionField.getText();
+                dateInput = dueDateField.getValue();
+                if(dateInput != null)
+                {
+                        dateStr = dateInput.toString();
+                }
+
+                else
+                {
+                       dateStr = "None";
+                }
+
+                action.addTask(dateStr,descriptionInput);
+                descriptionInput = null;
+                dateInput = null;
+        }
 
         @FXML
-        private Button prevList;
+        void clearList(ActionEvent event) {
+
+        }
 
         @FXML
-        private Button renameList;
+        void deleteItem(ActionEvent event) {
 
-        @FXML
-        private TextField taskField;
+        }
 
-        @FXML
-        private TextField titleTextField;
 
-    }
 
+
+
+
+        @Override
+        public void initialize(URL url, ResourceBundle rb)
+        {
+                addButton.setOnAction(this::addItem);
+        }
+
+
+
+}

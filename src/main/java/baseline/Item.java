@@ -6,33 +6,39 @@
 
 package baseline;
 
+
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class Item {
-    private final String description = "";
-    private final String date = "None";
+    private final StringProperty description;
+    private final StringProperty date;
+
+    public Item(){
+        this(null,null);
+    }
 
     public Item(String description, String date) {
-        //setDescription(description);
-        //setDate(date);
+        this.description = new SimpleStringProperty(description);
+        this.date = new SimpleStringProperty(date);
     }
 
     public void setDate(String dateIn)
     {
-        //date.set(dateIn);
+        this.date.set(dateIn);
     }
 
     public void setDescription(String descriptionIn)
     {
-        //description.set(descriptionIn);
+        this.description.set(descriptionIn);
     }
 
     public String getDate()
     {
-        return date;
+        return date.get();
     }
     public String getDescription()
     {
-        return description;
+        return description.get();
     }
 }

@@ -7,10 +7,13 @@ package baseline;
 public class TodoItemManager {
 
 
-    public void addTask(String date, String task, String description)
+    public void addTask(String date, String description)
     {
+        System.out.println(date);
+        System.out.println(description);
         //Pull date and description fields
         //Put date and descriptions into lists
+
         //Pull from lists to update tableview
     }
     public void deleteTask(int index)
