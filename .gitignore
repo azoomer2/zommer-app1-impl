@@ -1,0 +1,5 @@
+ 
+**/build/
+**/.gradle/
+**/build/classes/java/main/
+**/.idea/
