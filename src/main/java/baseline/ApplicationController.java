@@ -4,16 +4,26 @@
  */
 package baseline;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Menu;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.InputMethodEvent;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -22,10 +32,16 @@ import java.util.ResourceBundle;
 
 public class ApplicationController implements Initializable {
 
-        private LocalDate dateInput;
+        private String dateInput;
         private String descriptionInput;
+        private String completeInput;
 
-        TodoItemManager action = new TodoItemManager();
+        TodoListManager listMan = new TodoListManager();
+
+
+
+
+        ObservableList<String> choiceBoxOptions = FXCollections.observableArrayList("All","Complete","Incomplete");
 
         @FXML
         private Button addButton;
@@ -34,19 +50,19 @@ public class ApplicationController implements Initializable {
         private Button clearButton;
 
         @FXML
-        private TableColumn<?, ?> completed;
+        private TableColumn<Item, String> completed;
 
         @FXML
-        private TableView<?> dataTable;
+        private TableView<Item> dataTable;
 
         @FXML
-        private TableColumn<?, ?> date;
+        private TableColumn<Item, String> date;
 
         @FXML
         private Button deleteButton;
 
         @FXML
-        private TableColumn<?, ?> description;
+        private TableColumn<Item, String> description;
 
         @FXML
         private TextField descriptionField;
@@ -58,47 +74,146 @@ public class ApplicationController implements Initializable {
         private Menu file;
 
         @FXML
+        private MenuItem loadButton;
+
+        @FXML
+        private MenuItem saveButton;
+
+        @FXML
+        private ChoiceBox<String> choiceBox;
+
+        @FXML
         void addItem(ActionEvent event) {
-                String dateStr;
-
-                descriptionInput = descriptionField.getText();
-                dateInput = dueDateField.getValue();
-                if(dateInput != null)
+                String descIn = descriptionField.getText();
+                LocalDate date = dueDateField.getValue();
+                completeInput = "n";
+                if(date != null)
                 {
-                        dateStr = dateInput.toString();
+                        dateInput = date.toString();
                 }
-
                 else
-                {
-                       dateStr = "None";
-                }
+                        dateInput = "none";
 
-                action.addTask(dateStr,descriptionInput);
-                descriptionInput = null;
-                dateInput = null;
+                listMan.addTask(dateInput,descIn,completeInput);
+                descriptionField.clear();
+                dueDateField.setValue(null);
         }
 
         @FXML
         void clearList(ActionEvent event) {
-
+                listMan.clearList();
         }
 
         @FXML
         void deleteItem(ActionEvent event) {
-
+                Item delete = dataTable.getSelectionModel().getSelectedItem();
+                listMan.deleteTask(delete);
         }
 
+        @FXML
+        void filterChange(InputMethodEvent event) {
 
-
-
-
+        }
 
         @Override
         public void initialize(URL url, ResourceBundle rb)
         {
-                addButton.setOnAction(this::addItem);
+                initTable();
+                initChoiceBox();
+
         }
 
+        private void initTable()
+        {
+                initCols();
+        }
 
+        private void initCols()
+        {
+
+                description.setCellValueFactory(new PropertyValueFactory<Item,String>("description"));
+                date.setCellValueFactory(new PropertyValueFactory<Item,String>("date"));
+                completed.setCellValueFactory(new PropertyValueFactory<Item,String>("complete"));
+
+                editableCols();
+
+                dataTable.setItems(listMan.getList());
+        }
+
+        private void editableCols()
+        {
+
+                description.setCellFactory(TextFieldTableCell.forTableColumn());
+                description.setOnEditCommit(e->
+                        e.getTableView().getItems().get(e.getTablePosition().getRow()).setDescription(e.getNewValue()));
+
+                date.setCellFactory(TextFieldTableCell.forTableColumn());
+                date.setOnEditCommit(e->
+                        e.getTableView().getItems().get(e.getTablePosition().getRow()).setDate(e.getNewValue()));
+
+                completed.setCellFactory(TextFieldTableCell.forTableColumn());
+                completed.setOnEditCommit(e->
+                        e.getTableView().getItems().get(e.getTablePosition().getRow()).setComplete(e.getNewValue()));
+
+                dataTable.setEditable(true);
+        }
+
+        private void initChoiceBox()
+        {
+
+                choiceBox.setItems(choiceBoxOptions);
+                choiceBox.setValue("All");
+
+                choiceBox.valueProperty().addListener((observable, oldValue, newValue) -> listMan.filteredList.setPredicate(Item->{
+                                if(newValue.equals("All")|| newValue.isEmpty()) {
+                                        return true;
+                                }
+
+                                else if (newValue.equals("Complete"))
+                                {
+                                        return Item.getComplete().equals("y") || Item.getComplete().equals("Y");
+                                }
+
+                                else
+                                {
+                                        return !Item.getComplete().equals("y") && !Item.getComplete().equals("Y");
+                                }
+                        }));
+                        dataTable.setItems(listMan.getList());
+
+
+
+
+
+        }
+        @FXML
+        void load(ActionEvent event) throws IOException {
+                JButton load = new JButton();
+                JFileChooser fc = new JFileChooser();
+                fc.setCurrentDirectory(new java.io.File(""));
+                fc.setDialogTitle("Save List");
+                if(fc.showOpenDialog(load) == JFileChooser.APPROVE_OPTION){
+
+                }
+                String path = fc.getSelectedFile().getPath();
+
+                listMan.loadList(path);
+
+        }
+
+        @FXML
+        void save(ActionEvent event) throws IOException {
+
+                JButton save = new JButton();
+                JFileChooser fc = new JFileChooser();
+                fc.setCurrentDirectory(new java.io.File(""));
+                fc.setDialogTitle("Save List");
+                if(fc.showSaveDialog(save) == JFileChooser.APPROVE_OPTION){
+
+                }
+                String path = fc.getSelectedFile().getPath();
+
+                listMan.saveList(path);
+        }
 
 }

@@ -11,34 +11,42 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Item {
-    private final StringProperty description;
-    private final StringProperty date;
+    private String description;
+    private String date;
+    private String complete;
 
-    public Item(){
-        this(null,null);
-    }
-
-    public Item(String description, String date) {
-        this.description = new SimpleStringProperty(description);
-        this.date = new SimpleStringProperty(date);
-    }
-
-    public void setDate(String dateIn)
+    public Item(String description, String date, String complete)
     {
-        this.date.set(dateIn);
+        this.description = description;
+        this.date = date;
+        this.complete = complete;
     }
 
-    public void setDescription(String descriptionIn)
-    {
-        this.description.set(descriptionIn);
+    public Item() {
+
     }
 
-    public String getDate()
-    {
-        return date.get();
+    public String getComplete() {
+        return complete;
     }
-    public String getDescription()
-    {
-        return description.get();
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setComplete(String complete) {
+        this.complete = complete;
     }
 }
