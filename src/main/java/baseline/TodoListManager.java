@@ -7,7 +7,7 @@ package baseline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.stage.StageStyle;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,29 +16,29 @@ import java.util.Arrays;
 public class TodoListManager {
 
 
-
-    ObservableList<Item> list = FXCollections.observableArrayList(
-            //new Item("Mow lawn","2021-11-08","n"),
-            //new Item("cry","forever", "n")
-    );
+    //create empty observable list
+    ObservableList<Item> list = FXCollections.observableArrayList();
+    //wrap observable list in filtered list
     FilteredList<Item> filteredList = new FilteredList<>(list,p->true);
 
     public ObservableList<Item> getList()
     {
+        //return list
         return this.filteredList;
     }
 
-    public void addTask(String date, String description, String complete)
+    public void addTask(String description, String date,  String complete)
     {
+        //trim description if longer than 256
         description = description.substring(0, Math.min(description.length(),256));
 
-
+        //.add new observable list item
         list.add(new Item(description,date,complete));
     }
     public void deleteTask(Item index)
     {
-        list.remove(index);
         //Delete the selected index from the list
+        list.remove(index);
     }
     public void clearList()
     {
@@ -47,11 +47,12 @@ public class TodoListManager {
     }
 
     public void saveList( String path) throws IOException {
-
-        FileWriter writer = null;
+        //Open new file at path from file
+        FileWriter writer;
         writer = new FileWriter(path+".txt");
 
         FileWriter finalWriter = writer;
+        //write pseudo comma delineated file out to path
         list.forEach(Item -> {
             try {
                 finalWriter.write(Item.getDescription()+",");
@@ -69,31 +70,29 @@ public class TodoListManager {
 
     }
     public void loadList(String path) throws IOException {
+        //clear out old list to make room for new
         clearList();
-        BufferedReader br = new BufferedReader(new FileReader(path));
-        String line = null;
+        //new buffered reader to read in pseudo comma delineated save file
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line;
+            //read in each line of loaded file and call reader function
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split("\n");
 
-
-        while ((line = br.readLine()) != null) {
-            String[] values = line.split("\n");
-
-            for (String str : values) {
-                listLoader(str);
+                for (String str : values) {
+                    listLoader(str);
+                }
             }
         }
-        br.close();
+
     }
 
     private void listLoader(String str) {
+        //.split up the line read String by ",", add to new list
         ArrayList<String> tempList = new ArrayList<>(Arrays.asList(str.split(",")));
-        list.add(new Item(tempList.get(0),tempList.get(1), tempList.get(2)));
+        addTask(tempList.get(0),tempList.get(1), tempList.get(2));
     }
 }
 
-
-
-
-
-    //EDITING OF DESCRIPTION CAN BE DONE DIRECTLY IN THE TO DO LIST TABLE
 
 

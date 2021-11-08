@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ApplicationController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="529.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ApplicationController">
    <children>
       <MenuBar>
         <menus>
@@ -34,23 +34,23 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ChoiceBox fx:id="choiceBox" onInputMethodTextChanged="#filterChange" prefHeight="25.0" prefWidth="256.0" />
+            <ChoiceBox fx:id="choiceBox" onInputMethodTextChanged="#filterChange" prefHeight="25.0" prefWidth="256.0" translateX="-10.0" />
          </children></HBox>
-      <TableView fx:id="dataTable" editable="true">
+      <TableView fx:id="dataTable" editable="true" maxHeight="-Infinity" prefHeight="385.0" prefWidth="894.0">
         <columns>
           <TableColumn fx:id="date" prefWidth="142.0" text="Due Date" />
             <TableColumn fx:id="description" prefWidth="673.0" text="Description" />
             <TableColumn fx:id="completed" minWidth="0.0" prefWidth="78.0" text="Completed" />
         </columns>
       </TableView>
-      <ButtonBar>
+      <ButtonBar translateY="10.0">
         <buttons>
-          <Button fx:id="addButton" mnemonicParsing="false" onAction="#addItem" text="Add Item" />
-            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteItem" text="Delete Item" />
-            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearList" text="Clear List" />
+          <Button fx:id="addButton" mnemonicParsing="false" onAction="#addItem" style="-fx-background-radius: 10;" text="Add Item" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteItem" style="-fx-background-radius: 10;" text="Delete Item" />
+            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearList" style="-fx-background-radius: 10;" text="Clear List" />
         </buttons>
       </ButtonBar>
-      <HBox prefHeight="100.0" prefWidth="600.0">
+      <HBox alignment="BOTTOM_LEFT" prefHeight="31.0" prefWidth="894.0" translateY="10.0">
          <children>
             <DatePicker fx:id="dueDateField" editable="false" promptText="Due Date" />
             <TextField fx:id="descriptionField" prefHeight="26.0" prefWidth="446.0" promptText="Description" />

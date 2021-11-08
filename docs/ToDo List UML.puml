@@ -22,17 +22,8 @@ Class TodoItemManager{
     +addTask(String date,String description)
     +deleteTask(int index)
     +clearList()
-    +markComplete(int index)
-    -displayAll()
-    -displayComplete()
-    -displayIncomplete()
-    -saveList()
-    -loadList()
-
-
-    -displayAll()
-    -displayComplete()
-    -displayIncomplete()
+    +saveList()
+    +loadList()
 }
 
 

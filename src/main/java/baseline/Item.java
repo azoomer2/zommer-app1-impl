@@ -6,10 +6,6 @@
 
 package baseline;
 
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 public class Item {
     private String description;
     private String date;

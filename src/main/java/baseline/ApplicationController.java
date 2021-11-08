@@ -4,8 +4,6 @@
  */
 package baseline;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,8 +19,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.InputMethodEvent;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -32,14 +28,11 @@ import java.util.ResourceBundle;
 
 public class ApplicationController implements Initializable {
 
-        private String dateInput;
-        private String descriptionInput;
-        private String completeInput;
+         String dateInput;
+
+         String completeInput;
 
         TodoListManager listMan = new TodoListManager();
-
-
-
 
         ObservableList<String> choiceBoxOptions = FXCollections.observableArrayList("All","Complete","Incomplete");
 
@@ -85,16 +78,19 @@ public class ApplicationController implements Initializable {
         @FXML
         void addItem(ActionEvent event) {
                 String descIn = descriptionField.getText();
-                LocalDate date = dueDateField.getValue();
+                LocalDate dateIn = dueDateField.getValue();
                 completeInput = "n";
-                if(date != null)
+                if(dateIn != null)
                 {
-                        dateInput = date.toString();
+                        dateInput = dateIn.toString();
                 }
                 else
                         dateInput = "none";
 
-                listMan.addTask(dateInput,descIn,completeInput);
+                if(descIn == "")
+                        descIn = "No description provided";
+
+                listMan.addTask(descIn,dateInput,completeInput);
                 descriptionField.clear();
                 dueDateField.setValue(null);
         }
@@ -107,13 +103,14 @@ public class ApplicationController implements Initializable {
         @FXML
         void deleteItem(ActionEvent event) {
                 Item delete = dataTable.getSelectionModel().getSelectedItem();
+                System.out.println(dataTable.getSelectionModel().getSelectedItem());
                 listMan.deleteTask(delete);
         }
-
         @FXML
         void filterChange(InputMethodEvent event) {
-
+                //Unused In final code
         }
+
 
         @Override
         public void initialize(URL url, ResourceBundle rb)
@@ -131,9 +128,9 @@ public class ApplicationController implements Initializable {
         private void initCols()
         {
 
-                description.setCellValueFactory(new PropertyValueFactory<Item,String>("description"));
-                date.setCellValueFactory(new PropertyValueFactory<Item,String>("date"));
-                completed.setCellValueFactory(new PropertyValueFactory<Item,String>("complete"));
+                description.setCellValueFactory(new PropertyValueFactory<>("description"));
+                date.setCellValueFactory(new PropertyValueFactory<>("date"));
+                completed.setCellValueFactory(new PropertyValueFactory<>("complete"));
 
                 editableCols();
 
@@ -193,7 +190,7 @@ public class ApplicationController implements Initializable {
                 fc.setCurrentDirectory(new java.io.File(""));
                 fc.setDialogTitle("Save List");
                 if(fc.showOpenDialog(load) == JFileChooser.APPROVE_OPTION){
-
+                        System.out.println("Successfully Loaded");
                 }
                 String path = fc.getSelectedFile().getPath();
 
@@ -209,7 +206,7 @@ public class ApplicationController implements Initializable {
                 fc.setCurrentDirectory(new java.io.File(""));
                 fc.setDialogTitle("Save List");
                 if(fc.showSaveDialog(save) == JFileChooser.APPROVE_OPTION){
-
+                        System.out.println("Successfully Saved");
                 }
                 String path = fc.getSelectedFile().getPath();
 
